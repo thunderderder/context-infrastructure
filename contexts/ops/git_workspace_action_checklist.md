@@ -1,85 +1,118 @@
-﻿# 宸ヤ綔鍖?Git 琛屽姩娓呭崟锛坕nfra + 椤圭洰鎷嗗垎锛?
-> 鑳屾櫙锛?026-10-12 璧?`adhoc_jobs/ai_yh` 涓哄祵濂楃嫭绔嬩粨锛岃繙绋?[thunderderder/dxz](https://github.com/thunderderder/dxz)锛屽垎鏀?`mvp-sep2026`锛涙牴浠?`context-infrastructure` 涓嶅啀璺熻釜璇ョ洰褰曘€? 
-> 鏈枃鏄?*浣犺浜叉墜鍋氱殑姝ラ**锛涚姸鎬佷互浣犳墽琛屽墠鏈湴 `git status` 涓哄噯銆?
+# 工作区 Git 行动清单（infra + 项目拆分）
+
+> 背景：2026-10-12 起 `adhoc_jobs/ai_yh` 为嵌套独立仓，远程 [thunderderder/dxz](https://github.com/thunderderder/dxz)，分支 `mvp-sep2026`；根仓 `context-infrastructure` 不再跟踪该目录。  
+> 本文是**你要亲手做的步骤**；状态以你执行前本地 `git status` 为准。
+
 ---
 
-## 鍦板浘锛氫袱涓?git锛屼竴涓枃浠跺す
+## 地图：两个 git，一个文件夹
 
-骞虫椂浠嶅彧鎵撳紑 `D:\code_project\context-infrastructure`锛屼絾 **commit / push 瑕佺湅浣犲湪鍝釜鐩綍寮€缁堢**銆?
-| 浣犲湪鍋氫粈涔?| 鏈湴璺緞 | GitHub 浠撳簱 | 棰戠巼 |
+平时仍只打开 `D:\code_project\context-infrastructure`，但 **commit / push 要看你在哪个目录开终端**。
+
+| 你在做什么 | 本地路径 | GitHub 仓库 | 频率 |
 |------------|----------|-------------|------|
-| 涓滃皬鏅猴紙浠ｇ爜銆侀儴缃层€乣docs/working.md`锛?| `adhoc_jobs\ai_yh\` | [thunderderder/dxz](https://github.com/thunderderder/dxz) | 缁忓父 push |
-| Skill銆乄ORKSPACE銆丱BSERVATIONS銆乭eartbeat | 浠撳簱**鏍圭洰褰?* | [thunderderder/context-infrastructure](https://github.com/thunderderder/context-infrastructure) | 鍔?skill 鏃?push |
-| 鍏朵粬鐙珛浠撻」鐩紙count_yolo銆乤gent-qa鈥︼級 | `adhoc_jobs\<椤圭洰>\` | 瑙?`rules/WORKSPACE.md` 瀵瑰簲琛?| 鍋氳椤圭洰鏃?|
+| 东小智（代码、部署、`docs/working.md`） | `adhoc_jobs\ai_yh\` | [thunderderder/dxz](https://github.com/thunderderder/dxz) | 经常 push |
+| Skill、WORKSPACE、OBSERVATIONS、heartbeat | 仓库**根目录** | [thunderderder/context-infrastructure](https://github.com/thunderderder/context-infrastructure) | 加 skill 时 push |
+| 其他独立仓项目（count_yolo、agent-qa…） | `adhoc_jobs\<项目>\` | 见 `rules/WORKSPACE.md` 对应行 | 做该项目时 |
 
-**骞冲彴**锛氭彁浜ゅ湪鏈湴锛圥owerShell / Cursor 缁堢锛夛紱**GitHub 缃戦〉**鐢ㄦ潵纭 push 鎴愬姛銆佺湅 diff锛屼笉蹇呭湪缃戦〉涓婃棩甯告彁浜ゃ€?
-**鍐欐竻鍗曟椂鏈湴蹇収锛堜緵瀵圭収锛?*
+**平台**：提交在本地（PowerShell / Cursor 终端）；**GitHub 网页**用来确认 push 成功、看 diff，不必在网页上日常提交。
 
-- `adhoc_jobs/ai_yh`锛氬垎鏀?`mvp-sep2026`锛屽凡鏈夋湰鍦版彁浜わ紝**灏氭湭** `git push` / 鏈 upstream銆?- 鏍逛粨锛氬垎鏀?`ai_yh/mvp-sep2026`锛?*宸叉殏瀛?*浠庣储寮曠Щ闄?`adhoc_jobs/ai_yh`锛堢害 80 鏂囦欢锛夛紱`rules/WORKSPACE.md` 宸叉敼銆侀渶 `git add` 鍚庝笌涓婁竴骞舵彁浜わ紱鍙︽湁澶ч噺鍏朵粬鏈彁浜ゆ敼鍔紙YH銆乽va 绛夛級鈥斺€?*涓嶈涓€娆℃€у叏鎻愪氦**銆?
+**写清单时本地快照（供对照）**
+
+- `adhoc_jobs/ai_yh`：分支 `mvp-sep2026`，已有本地提交，**尚未** `git push` / 未设 upstream。
+- 根仓：分支 `ai_yh/mvp-sep2026`；**已暂存**从索引移除 `adhoc_jobs/ai_yh`（约 80 文件）；`rules/WORKSPACE.md` 已改、需 `git add` 后与上一并提交；另有大量其他未提交改动（YH、uva 等）——**不要一次性全提交**。
+
 ---
 
-## 闃舵 A锛氫笢灏忔櫤鎺ㄥ埌 GitHub锛堥」鐩富鎴樺満锛?
-**鐩綍**锛歚cd D:\code_project\context-infrastructure\adhoc_jobs\ai_yh`  
-**杩滅▼**锛欸itHub `thunderderder/dxz`
+## 阶段 A：东小智推到 GitHub（项目主战场）
 
-- [ ] **A1** `git status` 鈫?搴旀樉绀?`## mvp-sep2026`锛屽綋鍓嶈矾寰勫湪 `...\adhoc_jobs\ai_yh`銆?- [ ] **A2**锛堝彲閫夛級`git fetch origin`锛屽姣旀湰鏈轰笌杩滅▼锛? 
+**目录**：`cd D:\code_project\context-infrastructure\adhoc_jobs\ai_yh`  
+**远程**：GitHub `thunderderder/dxz`
+
+- [ ] **A1** `git status` → 应显示 `## mvp-sep2026`，当前路径在 `...\adhoc_jobs\ai_yh`。
+- [ ] **A2**（可选）`git fetch origin`，对比本机与远程：  
   `git log --oneline -3`  
   `git log origin/mvp-sep2026 --oneline -3`  
-  杩滅▼澶氫负杈冩棭浜ゆ帴蹇収锛屼笌鏈満**鍙兘涓嶆槸鍚屼竴鏉″巻鍙?*锛屽睘姝ｅ父銆?- [ ] **A3** 浠ユ湰鏈轰负鍑嗭紙鎺ㄨ崘锛夛細
+  远程多为较早交接快照，与本机**可能不是同一条历史**，属正常。
+- [ ] **A3** 以本机为准（推荐）：
 
   ```powershell
   git push -u origin mvp-sep2026 --force-with-lease
   ```
 
-  鑻ュ繀椤讳繚鐣欒繙绋嬫棫鎻愪氦锛氬厛 `git merge origin/mvp-sep2026 --allow-unrelated-histories`锛岃В鍐茬獊鍚庡啀 `git push -u origin mvp-sep2026`銆?
-- [ ] **A4** 娴忚鍣ㄦ墦寮€ [dxz / mvp-sep2026](https://github.com/thunderderder/dxz/tree/mvp-sep2026)锛岀‘璁ゆ渶鏂?commit銆?
-**浠ュ悗**锛氫笢灏忔櫤鍙湪姝ょ洰褰?`git add` / `commit` / `push`锛屼笉瑕佸湪鏍圭洰褰曟彁浜?`adhoc_jobs/ai_yh` 鍐呮枃浠躲€?
+  若必须保留远程旧提交：先 `git merge origin/mvp-sep2026 --allow-unrelated-histories`，解冲突后再 `git push -u origin mvp-sep2026`。
+
+- [ ] **A4** 浏览器打开 [dxz / mvp-sep2026](https://github.com/thunderderder/dxz/tree/mvp-sep2026)，确认最新 commit。
+
+**以后**：东小智只在此目录 `git add` / `commit` / `push`，不要在根目录提交 `adhoc_jobs/ai_yh` 内文件。
+
 ---
 
-## 闃舵 B锛氭牴浠撶櫥璁般€屼笉鍐嶈窡韪?ai_yh銆嶏紙infra锛?
-**鐩綍**锛歚cd D:\code_project\context-infrastructure`  
-**杩滅▼**锛欸itHub `thunderderder/context-infrastructure`
+## 阶段 B：根仓登记「不再跟踪 ai_yh」（infra）
 
-- [ ] **B1** `git diff --cached --stat` 鈫?搴斾富瑕佹槸 `adhoc_jobs/ai_yh/` 鍒犻櫎锛岀害 80 鏂囦欢锛?*涓嶆槸**涓婂崈鏂囦欢銆?- [ ] **B2** `git add rules/WORKSPACE.md`
-- [ ] **B3** 鍙彁浜よ劚閽?+ 璺敱锛堝嬁甯︿笂 YH/uva 绛夊叾瀹冩敼鍔級锛?
+**目录**：`cd D:\code_project\context-infrastructure`  
+**远程**：GitHub `thunderderder/context-infrastructure`
+
+- [ ] **B1** `git diff --cached --stat` → 应主要是 `adhoc_jobs/ai_yh/` 删除，约 80 文件，**不是**上千文件。
+- [ ] **B2** `git add rules/WORKSPACE.md`
+- [ ] **B3** 只提交脱钩 + 路由（勿带上 YH/uva 等其它改动）：
+
   ```powershell
   git commit -m "chore: stop tracking adhoc_jobs/ai_yh (nested dxz repo)"
   ```
 
-- [ ] **B4** Push锛堝綋鍓嶅湪 `ai_yh/mvp-sep2026` 涓婂彲鍏堟帹杩欐潯鍒嗘敮锛夛細
+- [ ] **B4** Push（当前在 `ai_yh/mvp-sep2026` 上可先推这条分支）：
 
   ```powershell
   git push origin ai_yh/mvp-sep2026
   ```
 
-  闀胯繙鍙妸璇?commit cherry-pick 鍒?`main`锛屾牴浠撴棩甯告敼鐢?`main` 鍔?skill锛堣闃舵 C锛夈€?
-- [ ] **B5** 鍦?GitHub 鎵撳紑 context-infrastructure锛岀‘璁ゆ湰娆?commit **鏈?*璇甫 `adhoc_jobs/YH` 绛夊ぇ娈甸」鐩?diff銆?
+  长远可把该 commit cherry-pick 到 `main`，根仓日常改用 `main` 加 skill（见阶段 C）。
+
+- [ ] **B5** 在 GitHub 打开 context-infrastructure，确认本次 commit **未**误带 `adhoc_jobs/YH` 等大段项目 diff。
+
 ---
 
-## 闃舵 C锛氭牴浠撳垎鏀範鎯紙涓嶆€ワ級
+## 阶段 C：根仓分支习惯（不急）
 
-- [ ] **C1** 鏍逛粨鍒嗘敮鍚?`ai_yh/mvp-sep2026` 鈮?椤圭洰浠?`adhoc_jobs\ai_yh` 閲岀殑 `mvp-sep2026`锛涢」鐩?git 鍦?`adhoc_jobs\ai_yh\.git`銆?- [ ] **C2**锛堝彲閫夛級`git checkout main`锛宍git pull origin main`锛屾洿鏂版湰鍦?infra 涓荤嚎銆?- [ ] **C3**锛堝彲閫夛級灏嗛樁娈?B 鐨?commit cherry-pick 鍒?`main`锛屼互鍚庢牴鐩綍鍦?`main` 涓婃敼 skill銆?- [ ] **C4**锛堝彲閫夛級鍒犻櫎鏃犵敤鏈湴鍒嗘敮 `dxz-subtree-split`銆乣dxz-mvp-sep2026`锛堝湪 A3 纭 dxz 杩滅▼浠ユ湰鏈轰负鍑嗗悗锛夈€?
-**鍙拷鐣?*锛歚remotes/upstream-ci/*` 涓轰笂娓?grapeot 闀滃儚锛岄櫎闈炰富鍔ㄥ悎涓婃父 infra銆?
+- [ ] **C1** 根仓分支名 `ai_yh/mvp-sep2026` ≠ 项目仓 `adhoc_jobs\ai_yh` 里的 `mvp-sep2026`；项目 git 在 `adhoc_jobs\ai_yh\.git`。
+- [ ] **C2**（可选）`git checkout main`，`git pull origin main`，更新本地 infra 主线。
+- [ ] **C3**（可选）将阶段 B 的 commit cherry-pick 到 `main`，以后根目录在 `main` 上改 skill。
+- [ ] **C4**（可选）删除无用本地分支 `dxz-subtree-split`、`dxz-mvp-sep2026`（在 A3 确认 dxz 远程以本机为准后）。
+
+**可忽略**：`remotes/upstream-ci/*` 为上游 grapeot 镜像，除非主动合上游 infra。
+
 ---
 
-## 闃舵 D锛氭棩甯稿垎宸?
-| 鍦烘櫙 | 鏈湴 | 杩滅▼ |
+## 阶段 D：日常分工
+
+| 场景 | 本地 | 远程 |
 |------|------|------|
-| 涓滃皬鏅哄紑鍙?/ 閮ㄧ讲 | `adhoc_jobs\ai_yh` | `thunderderder/dxz` |
-| 鍔?skill銆乭eartbeat銆丱BSERVATIONS | 浠撳簱鏍?| `thunderderder/context-infrastructure` |
-| ECS 閮ㄧ讲 | 椤圭洰鍐?`deploy\pack_deploy.ps1` | 瀵嗛挜锛歚%USERPROFILE%\.ssh\context_deploy_ecs.pem` 鎴栨牴鐩綍 `rules\skills\deploy.pem` |
+| 东小智开发 / 部署 | `adhoc_jobs\ai_yh` | `thunderderder/dxz` |
+| 加 skill、heartbeat、OBSERVATIONS | 仓库根 | `thunderderder/context-infrastructure` |
+| ECS 部署 | 项目内 `deploy\pack_deploy.ps1` | 密钥：`%USERPROFILE%\.ssh\context_deploy_ecs.pem` 或根目录 `rules\skills\deploy.pem` |
 
-Cursor 鍙户缁墦寮€鏁翠釜 `context-infrastructure`锛?*鐗堟湰璁板綍**鎸変笂琛ㄥ垎浠撴彁浜ゃ€?
+Cursor 可继续打开整个 `context-infrastructure`；**版本记录**按上表分仓提交。
+
 ---
 
-## 闃舵 E锛氭殏涓嶅鐞?
-- [ ] 鏍逛粨鍏朵綑 1000+ 鏉℃湭鎻愪氦鏀瑰姩锛堝綊妗ｃ€乊H銆乽va鈥︼級鈥斺€斿崟鐙垎鎵规暣鐞嗐€?- [ ] `uva`銆乣YH` 绛夋媶鎴愬祵濂楃嫭绔嬩粨鈥斺€旀寜闇€鍐嶅仛銆?- [ ] 鍒犻櫎鏈湴 `adhoc_jobs\ai_yh\voice\_nested_git_backup_20261012`锛堜粎澶囦唤锛屽垹涓嶅奖鍝?git锛夈€?
+## 阶段 E：暂不处理
+
+- [ ] 根仓其余 1000+ 条未提交改动（归档、YH、uva…）——单独分批整理。
+- [ ] `uva`、`YH` 等拆成嵌套独立仓——按需再做。
+- [ ] 删除本地 `adhoc_jobs\ai_yh\voice\_nested_git_backup_20261012`（仅备份，删不影响 git）。
+
 ---
 
-## 浠婂ぉ 15 鍒嗛挓鏈€灏忚矾寰?
-1. `cd adhoc_jobs\ai_yh` 鈫?`git push -u origin mvp-sep2026 --force-with-lease`锛?*dxz**锛?2. `cd` 鍒版牴鐩綍 鈫?`git add rules/WORKSPACE.md` 鈫?`git commit -m "chore: stop tracking adhoc_jobs/ai_yh (nested dxz repo)"` 鈫?`git push origin ai_yh/mvp-sep2026`锛?*context-infrastructure**锛?
+## 今天 15 分钟最小路径
+
+1. `cd adhoc_jobs\ai_yh` → `git push -u origin mvp-sep2026 --force-with-lease`（**dxz**）
+2. `cd` 到根目录 → `git add rules/WORKSPACE.md` → `git commit -m "chore: stop tracking adhoc_jobs/ai_yh (nested dxz repo)"` → `git push origin ai_yh/mvp-sep2026`（**context-infrastructure**）
+
 ---
 
-## 鐩稿叧
+## 相关
 
-- 鐩綍璺敱锛歚rules/WORKSPACE.md`锛堜笢灏忔櫤涓€琛屽惈 dxz 杩滅▼锛?- 椤圭洰灞€閮ㄨ鍒欙細`adhoc_jobs/ai_yh/AGENTS.md`锛圙it 涓?infra 寮辫€﹀悎璇存槑锛?- 宓屽浠撹剼鎵嬫灦锛歚rules/skills/project_scaffold.md`銆乣rules/skills/overlay/project_scaffold_local.md`
+- 目录路由：`rules/WORKSPACE.md`（东小智一行含 dxz 远程）
+- 项目局部规则：`adhoc_jobs/ai_yh/AGENTS.md`（Git 与 infra 弱耦合说明）
+- 嵌套仓脚手架：`rules/skills/project_scaffold.md`、`rules/skills/overlay/project_scaffold_local.md`
